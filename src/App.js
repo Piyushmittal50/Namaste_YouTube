@@ -1,10 +1,15 @@
+import { Provider } from "react-redux";
+import Body from "./components/Body";
+import Head from "./components/Head";
+import store from "./utility/store";
 function App() {
   return (
-    <div>
-      <h2>piyush</h2>
-    </div>
+    <Provider store={store}>
+      <div>
+        <Head />
+        <Body />
+      </div>
+    </Provider>
   );
 };
 export default App;
-
-
