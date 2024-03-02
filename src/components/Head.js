@@ -23,11 +23,11 @@ const Head = () => {
       </div>
       <div className="col-span-10">
         <input
-          className="w-1/2 p-2 border-gray-400 rounded-l-full"
+          className="w-1/2 p-2 border border-black rounded-l-full border-solid"
           type="text"
           placeholder="Search For YouTube"
         />
-        <button className="border rounded-r-full p-2 border-gray-400">
+        <button className="border rounded-r-full p-2 border-black hover:bg-gray-400">
           Search
         </button>
       </div>
