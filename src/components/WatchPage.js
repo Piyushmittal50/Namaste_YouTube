@@ -6,7 +6,7 @@ const WatchPage = () => {
   return (
     <div>
         <iframe
-        className='ml-6'
+        className='ml-10 mt-14'
         width="800"
         height="400"
         src={"https://www.youtube.com/embed/"+searchParams.get("v")}
