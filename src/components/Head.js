@@ -1,13 +1,24 @@
 import React, { useState } from 'react'
 import { HAMBURGER_MENU_ICON, USER_ICON, YOUTUBE_ICON, YOUTUBE_SEARCH_API } from '../utility/constants';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleMenu } from '../utility/appSlice';
 import { useEffect } from 'react';
+import { cacheResults } from '../utility/searchSlice';
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestion, setSuggestion] = useState([]);
   const [showSuggestion, setShowSuggestion] = useState(false);
+
+  const searchCache = useSelector((store) => store.search);
+  const dispatch = useDispatch();
+  // searchCache having a structure like this
+  /*
+  searchCache = {
+  "ip" : ["ipl","ip address"],
+  "iphone" : ["iphone 12","iphone new ","iphone screen"],
+  }
+  */
 
   // every time my search query changes my useEffect will be re-render
   useEffect(() => {
@@ -16,7 +27,16 @@ const Head = () => {
     // then skip some api calls
     // this concept is known as Debouncing
     //console.log(searchQuery);
-    const timer = setTimeout(() => getSearchSuggestions(), 200);
+    const timer = setTimeout(() => {
+      // if searchQuery is already present inside store
+      if (searchCache[searchQuery]) {
+        setSuggestion(searchCache[searchQuery])
+      }
+      // otherwise call api
+      else {
+        getSearchSuggestions();
+      }
+    }, 200);
 
     // it is used to clear previous setTimeout(),
     return () => {
@@ -28,9 +48,14 @@ const Head = () => {
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
     setSuggestion(json[1]);
+
+    // if searchQuery is not present in store then after api call now update the store
+    dispatch(cacheResults({
+      [searchQuery] : json[1],
+    }))
   };
 
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
